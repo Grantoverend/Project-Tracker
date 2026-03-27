@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f4f2ed;
+  --surface:  #ffffff;
+  --surface2: #edeae4;
+  --surface3: #e4e0d8;
+  --border:   rgba(0,0,0,0.09);
+  --border2:  rgba(0,0,0,0.16);
+  --text:     #18170f;
+  --text2:    #6b6858;
+  --text3:    #a09d92;
+  --accent:   #2d6a4f;
+  --radius:   13px;
+  --radius-s: 8px;
+  --shadow:   0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:      #131210;
+    --surface: #1c1b18;
+    --surface2:#242320;
+    --surface3:#2c2b27;
+    --border:  rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text:    #f0ece3;
+    --text2:   #9e9a8e;
+    --text3:   #5e5c54;
+    --accent:  #52b788;
+    --shadow:  0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Screens ── */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ══════════════════════════════════
+   SETUP SCREEN
+══════════════════════════════════ */
+#setup-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.setup-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 20px;
+  padding: 2.5rem 2.75rem;
+  max-width: 460px; width: 100%;
+  box-shadow: var(--shadow);
+}
+.setup-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: .75rem;
+}
+.setup-heading {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px; line-height: 1.15;
+  color: var(--text); margin-bottom: .5rem;
+}
+.setup-sub {
+  font-size: 14px; color: var(--text2);
+  line-height: 1.6; margin-bottom: 1.75rem;
+}
+.setup-steps {
+  background: var(--surface2);
+  border-radius: var(--radius-s);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  counter-reset: steps;
+}
+.setup-step {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; line-height: 1.5; color: var(--text2);
+  padding: 5px 0;
+  counter-increment: steps;
+}
+.setup-step::before {
+  content: counter(steps);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; font-weight: 500;
+  min-width: 20px; height: 20px;
+  background: var(--surface3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3); flex-shrink: 0; margin-top: 1px;
+}
+.setup-step a { color: var(--accent); text-decoration: none; }
+.setup-step a:hover { text-decoration: underline; }
+.setup-label {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--text3); text-transform: uppercase;
+  letter-spacing: .06em; margin-bottom: 6px;
+}
+.setup-input-wrap { position: relative; }
+.setup-input {
+  width: 100%; font-family: 'DM Mono', monospace;
+  font-size: 13px; padding: 10px 44px 10px 14px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-s);
+  background: var(--surface2); color: var(--text);
+  outline: none; transition: border-color .2s;
+  letter-spacing: .04em;
+}
+.setup-input:focus { border-color: var(--accent); }
+.setup-input::placeholder { color: var(--text3); letter-spacing: 0; }
+.toggle-vis {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); font-size: 14px; padding: 4px;
+}
+.toggle-vis:hover { color: var(--text2); }
+.setup-error {
+  font-size: 12px; color: #c0392b;
+  margin-top: 6px; display: none;
+}
+.setup-btn {
+  width: 100%; margin-top: 1.25rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 500;
+  padding: 12px;
+  border-radius: var(--radius-s); border: none;
+  background: var(--text); color: var(--bg);
+  cursor: pointer; transition: opacity .15s;
+  letter-spacing: .01em;
+}
+.setup-btn:hover { opacity: .85; }
+.setup-btn:disabled { opacity: .5; cursor: default; }
+
+/* ══════════════════════════════════
+   MAIN APP
+══════════════════════════════════ */
+header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.header-inner {
+  max-width: 1140px; margin: 0 auto;
+  padding: 0 1.75rem;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  height: 54px; gap: 1rem;
+}
+.logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px; color: var(--text);
+  letter-spacing: -.01em; flex-shrink: 0;
+}
+.logo span { color: var(--accent); }
+.header-center { display: flex; gap: 4px; }
+.filter-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px; padding: 5px 12px;
+  border-radius: 20px;
+  border: 0.5px solid var(--border);
+  background: transparent; color: var(--text2);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--border2); color: var(--text); }
+.filter-btn.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.header-right { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.sync-indicator {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--text3);
+  display: flex; align-items: center; gap: 5px;
+}
+.sync-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text3); transition: background .3s;
+  flex-shrink: 0;
+}
+.sync-dot.syncing { background: #e09f3e; animation: pulse .8s ease-in-out infinite; }
+.sync-dot.ok      { background: #52b788; }
+.sync-dot.error   { background: #c0392b; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.add-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 500;
+  padding: 7px 16px; border-radius: var(--radius-s);
+  border: none; background: var(--text); color: var(--bg);
+  cursor: pointer; transition: opacity .15s; white-space: nowrap;
+}
+.add-btn:hover { opacity: .85; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: var(--radius-s);
+  border: 0.5px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all .15s; font-size: 15px;
+}
+.icon-btn:hover { border-color: var(--border2); color: var(--text); background: var(--surface); }
+
+main {
+  max-width: 1140px; margin: 0 auto;
+  padding: 1.75rem 1.75rem 4rem;
+}
+
+/* ── Summary bar ── */
+.summary-bar {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+.stat {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-s);
+  padding: 10px 20px; min-width: 90px;
+  box-shadow: var(--shadow);
+}
+.stat-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 24px; font-weight: 500; line-height: 1.1;
+}
+.stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; text-transform: uppercase; letter-spacing: .05em; }
+.stat.warn .stat-num { color: #c47f17; }
+@media (prefers-color-scheme: dark) { .stat.warn .stat-num { color: #e09f3e; } }
+
+/* ── Card grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center; padding: 5rem 1rem;
+  color: var(--text3);
+}
+.empty-icon { font-size: 40px; margin-bottom: 1rem; opacity: .4; }
+.empty-title { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--text2); margin-bottom: .5rem; }
+.empty-sub { font-size: 14px; }
+
+/* ── Project card ── */
+.card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem 1rem;
+  cursor: pointer; position: relative;
+  transition: border-color .15s, transform .12s, box-shadow .12s;
+  box-shadow: var(--shadow);
+  animation: cardIn .22s ease both;
+}
+@keyframes cardIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+.card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.card.stalled { border-left: 3px solid #c47f17; }
+.card.done-card { opacity: .6; }
+
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+.card-title { font-size: 14px; font-weight: 500; line-height: 1.35; flex: 1; }
+.cat-badge {
+  font-size: 10px; font-weight: 500;
+  padding: 3px 8px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.cat-audio    { background: #d5f0e6; color: #0c5e47; }
+.cat-hardware { background: #d9eaf8; color: #1a527a; }
+.cat-software { background: #e8e5fc; color: #3d2ea3; }
+.cat-rc       { background: #fdecd4; color: #7a4b0e; }
+.cat-other    { background: #e8e6e1; color: #4f4c46; }
+@media (prefers-color-scheme: dark) {
+  .cat-audio    { background: #0d3d2b; color: #5ecfa2; }
+  .cat-hardware { background: #0d2e42; color: #6ab5e8; }
+  .cat-software { background: #1e1a4a; color: #a89cf5; }
+  .cat-rc       { background: #3d2507; color: #e8a84a; }
+  .cat-other    { background: #252320; color: #a09e97; }
+}
+
+.status-row { display: flex; align-items: center; gap: 7px; margin-bottom: 10px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.status-label { font-size: 12px; color: var(--text2); }
+.stall-tag {
+  margin-left: auto; font-size: 10px; font-family: 'DM Mono', monospace;
+  color: #c47f17; background: #fdecd4;
+  padding: 2px 7px; border-radius: 8px;
+}
+@media (prefers-color-scheme: dark) { .stall-tag { background: #3d2507; color: #e8a84a; } }
+
+.progress-bar { height: 2px; background: var(--surface2); border-radius: 2px; margin-bottom: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width .4s ease; }
+
+.next-action {
+  font-size: 12px; color: var(--text2); line-height: 1.5;
+  border-left: 2px solid var(--border2);
+  padding: 3px 0 3px 9px; margin-bottom: 10px;
+  font-style: italic;
+}
+
+.card-footer { display: flex; justify-content: space-between; align-items: center; }
+.log-count { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.updated   { font-size: 11px; color: var(--text3); }
+
+.del-card {
+  position: absolute; top: 10px; right: 10px;
+  opacity: 0; font-size: 18px; line-height: 1;
+  background: none; border: none; cursor: pointer;
+  color: var(--text3); transition: opacity .15s; padding: 2px 5px;
+}
+.card:hover .del-card { opacity: 1; }
+.del-card:hover { color: var(--text); }
+
+/* ══════════════════════════════════
+   MODAL
+══════════════════════════════════ */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 1rem;
+  animation: fadeBg .15s ease;
+}
+@keyframes fadeBg { from { opacity:0; } to { opacity:1; } }
+.modal {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 18px;
+  width: 100%; max-width: 540px;
+  max-height: 92vh; overflow-y: auto;
+  padding: 1.75rem 1.875rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: slideUp .18s ease;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+.modal-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px; margin-bottom: 1.25rem; color: var(--text);
+}
+
+.form-row { margin-bottom: 14px; }
+.form-row label {
+  display: block; font-size: 11px; font-weight: 500;
+  color: var(--text3); text-transform: uppercase;
+  letter-spacing: .07em; margin-bottom: 5px;
+}
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 9px 12px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-s);
+  background: var(--surface2); color: var(--text);
+  outline: none; transition: border-color .15s;
+}
+.form-row input:focus,
+.form-row select:focus,
+.form-row textarea:focus { border-color: var(--accent); }
+.form-row textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.slider-wrap { display: flex; align-items: center; gap: 12px; }
+.slider-wrap input[type=range] {
+  flex: 1; cursor: pointer; accent-color: var(--text);
+  height: 4px; border: none; background: transparent; padding: 0;
+}
+.slider-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; font-weight: 500; min-width: 38px; text-align: right;
+}
+
+.section-lbl {
+  font-size: 11px; font-weight: 500; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .07em;
+  margin: 1.5rem 0 8px;
+}
+.log-list {
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-s);
+  max-height: 200px; overflow-y: auto;
+  padding: 0 12px;
+}
+.log-entry {
+  font-size: 13px; padding: 9px 0;
+  border-bottom: 0.5px solid var(--border);
+  line-height: 1.45;
+}
+.log-entry:last-child { border-bottom: none; }
+.log-date { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+.log-add-row { display: flex; gap: 8px; margin-top: 8px; }
+.log-add-row input {
+  flex: 1; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 12px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-s);
+  background: var(--surface2); color: var(--text);
+  outline: none;
+}
+.log-add-row input:focus { border-color: var(--accent); }
+.log-add-row button {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 14px;
+  border: 0.5px solid var(--border2);
+  border-radius: var(--radius-s);
+  background: var(--surface2); color: var(--text);
+  cursor: pointer; white-space: nowrap; transition: background .15s;
+}
+.log-add-row button:hover { background: var(--surface3); }
+
+.btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid var(--border); }
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; padding: 8px 20px;
+  border-radius: var(--radius-s);
+  border: 0.5px solid var(--border2);
+  background: transparent; color: var(--text);
+  cursor: pointer; transition: background .15s;
+}
+.btn:hover { background: var(--surface2); }
+.btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.primary:hover { opacity: .85; }
+.btn.danger { color: #c0392b; border-color: rgba(192,57,43,.25); }
+.btn.danger:hover { background: rgba(192,57,43,.07); }
+
+/* ── Settings modal ── */
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 0.5px solid var(--border);
+  gap: 1rem;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-size: 14px; }
+.settings-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.settings-action { flex-shrink: 0; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--text); color: var(--bg);
+  font-size: 13px; padding: 9px 18px;
+  border-radius: 20px;
+  opacity: 0; transition: all .25s ease;
+  pointer-events: none; white-space: nowrap; z-index: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 600px) {
+  .header-inner { padding: 0 1rem; }
+  .header-center { display: none; }
+  main { padding: 1.25rem 1rem 4rem; }
+  .modal { padding: 1.25rem; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .setup-card { padding: 1.75rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SETUP SCREEN ══ -->
+<div id="setup-screen" class="screen active">
+  <div class="setup-card">
+    <div class="setup-eyebrow">First time setup</div>
+    <h1 class="setup-heading">Let's get<br><em>organised.</em></h1>
+    <p class="setup-sub">This app stores your projects securely in the cloud via JSONBin. You'll need a free API key to get started.</p>
+    <div class="setup-steps">
+      <div class="setup-step">Go to <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> and create a free account</div>
+      <div class="setup-step">Click your avatar → API Keys → Create Access Key</div>
+      <div class="setup-step">Copy the key and paste it below</div>
+    </div>
+    <label class="setup-label" for="api-key-input">Your JSONBin API key</label>
+    <div class="setup-input-wrap">
+      <input type="password" id="api-key-input" class="setup-input" placeholder="$2b$10$…" autocomplete="off" spellcheck="false">
+      <button class="toggle-vis" onclick="toggleKeyVis()" title="Show/hide key">👁</button>
+    </div>
+    <div id="setup-error" class="setup-error">That key doesn't seem to be valid. Please check and try again.</div>
+    <button class="setup-btn" id="setup-btn" onclick="setupConnect()">Connect & start →</button>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="app-screen" class="screen">
+  <header>
+    <div class="header-inner">
+      <div class="logo">Projects<span>.</span></div>
+      <div class="header-center" id="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="stalled">Stalled</button>
+        <button class="filter-btn" data-filter="idea">Ideas</button>
+        <button class="filter-btn" data-filter="done">Done</button>
+      </div>
+      <div class="header-right">
+        <div class="sync-indicator">
+          <div class="sync-dot" id="syncDot"></div>
+          <span id="syncLabel">—</span>
+        </div>
+        <button class="icon-btn" id="settingsBtn" title="Settings">⚙</button>
+        <button class="add-btn" id="addBtn">+ New project</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="summary-bar" id="summaryBar"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+</div>
+
+<!-- ══ PROJECT MODAL ══ -->
+<div class="modal-bg" id="modal" style="display:none">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<!-- ══ SETTINGS MODAL ══ -->
+<div class="modal-bg" id="settingsModal" style="display:none">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title">Settings</div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Sync status</div>
+        <div class="settings-sub" id="settings-bin-id">Bin ID: loading…</div>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Export backup</div>
+        <div class="settings-sub">Download all projects as JSON</div>
+      </div>
+      <div class="settings-action">
+        <button class="btn" onclick="exportData()">Export</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Import backup</div>
+        <div class="settings-sub">Merge from a previously exported file</div>
+      </div>
+      <div class="settings-action">
+        <button class="btn" onclick="document.getElementById('importFile').click()">Import</button>
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </div>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Force sync now</div>
+        <div class="settings-sub">Pull latest data from cloud</div>
+      </div>
+      <div class="settings-action">
+        <button class="btn" onclick="loadFromCloud(true)">Sync</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div>
+        <div class="settings-label">Change API key</div>
+        <div class="settings-sub">Disconnect and re-enter credentials</div>
+      </div>
+      <div class="settings-action">
+        <button class="btn danger" onclick="resetApiKey()">Reset</button>
+      </div>
+    </div>
+    <div class="btn-row" style="padding-top:.75rem">
+      <button class="btn primary" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+// CONSTANTS & STATE
+// ══════════════════════════════════
+const LS_KEY     = 'proj_api_key';
+const LS_BIN     = 'proj_bin_id';
+const LS_CACHE   = 'proj_cache';
+const JSONBIN    = 'https://api.jsonbin.io/v3';
+
+let projects     = [];
+let activeFilter = 'all';
+let apiKey       = '';
+let binId        = '';
+let syncTimer    = null;
+
+// ══════════════════════════════════
+// BOOT
+// ══════════════════════════════════
+(function boot() {
+  apiKey = localStorage.getItem(LS_KEY) || '';
+  binId  = localStorage.getItem(LS_BIN) || '';
+  if (apiKey) {
+    showApp();
+    loadFromCloud();
+  } else {
+    show('setup-screen');
+  }
+})();
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function showApp() {
+  show('app-screen');
+  document.getElementById('settingsBtn').onclick = openSettings;
+  document.getElementById('addBtn').onclick = openAdd;
+  document.getElementById('filters').addEventListener('click', onFilter);
+  document.getElementById('importFile').onchange = onImport;
+  document.getElementById('settings-bin-id').textContent = 'Bin ID: ' + (binId || 'not yet created');
+}
+
+// ══════════════════════════════════
+// SETUP
+// ══════════════════════════════════
+function toggleKeyVis() {
+  const inp = document.getElementById('api-key-input');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+async function setupConnect() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) return;
+  const btn = document.getElementById('setup-btn');
+  btn.textContent = 'Connecting…'; btn.disabled = true;
+  document.getElementById('setup-error').style.display = 'none';
+  try {
+    apiKey = key;
+    // Try creating a new bin
+    const r = await fetch(`${JSONBIN}/b`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key': apiKey, 'X-Bin-Name': 'projects-tracker' },
+      body: JSON.stringify({ projects: [] })
+    });
+    if (!r.ok) throw new Error('auth failed');
+    const d = await r.json();
+    binId = d.metadata.id;
+    localStorage.setItem(LS_KEY, apiKey);
+    localStorage.setItem(LS_BIN, binId);
+    projects = [];
+    showApp(); render();
+    toast('Connected! Your projects are now synced to the cloud.');
+  } catch(e) {
+    document.getElementById('setup-error').style.display = 'block';
+    btn.textContent = 'Connect & start →'; btn.disabled = false;
+    apiKey = '';
+  }
+}
+
+// ══════════════════════════════════
+// SYNC
+// ══════════════════════════════════
+function setSyncStatus(state, label) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = label;
+}
+
+async function loadFromCloud(manual) {
+  if (!binId) return;
+  setSyncStatus('syncing', 'syncing…');
+  try {
+    const r = await fetch(`${JSONBIN}/b/${binId}/latest`, {
+      headers: { 'X-Master-Key': apiKey }
+    });
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    projects = d.record.projects || [];
+    localStorage.setItem(LS_CACHE, JSON.stringify(projects));
+    render();
+    setSyncStatus('ok', 'synced');
+    if (manual) toast('Synced with cloud.');
+  } catch(e) {
+    // fall back to cache
+    try { projects = JSON.parse(localStorage.getItem(LS_CACHE)) || []; } catch(_) { projects = []; }
+    render();
+    setSyncStatus('error', 'offline');
+  }
+}
+
+async function saveToCloud() {
+  if (!binId) return;
+  setSyncStatus('syncing', 'saving…');
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(async () => {
+    try {
+      const r = await fetch(`${JSONBIN}/b/${binId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type':'application/json', 'X-Master-Key': apiKey },
+        body: JSON.stringify({ projects })
+      });
+      if (!r.ok) throw new Error();
+      localStorage.setItem(LS_CACHE, JSON.stringify(projects));
+      setSyncStatus('ok', 'saved');
+    } catch(e) {
+      setSyncStatus('error', 'save failed');
+      toast('Save failed — check your connection.');
+    }
+  }, 600);
+}
+
+// ══════════════════════════════════
+// UTILS
+// ══════════════════════════════════
+function stalledDays(p) {
+  if (p.status === 'done') return 0;
+  const last = p.logs && p.logs.length ? p.logs[p.logs.length-1].ts : p.created;
+  return Math.floor((Date.now() - last) / 86400000);
+}
+function fmtDate(ts) {
+  return new Date(ts).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+}
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════
+// RENDER
+// ══════════════════════════════════
+const STATUS_COLORS = { active:'#2d9e6e', paused:'#c47f17', done:'#3a7fd4', idea:'#7c6dd9' };
+const STATUS_LABELS = { active:'Active', paused:'Paused', done:'Done', idea:'Idea' };
+const CAT_CLASSES   = { audio:'cat-audio', hardware:'cat-hardware', software:'cat-software', rc:'cat-rc', other:'cat-other' };
+const CAT_LABELS    = { audio:'Audio', hardware:'Hardware', software:'Software', rc:'RC', other:'Other' };
+
+function render() {
+  const filtered = projects.filter(p => {
+    if (activeFilter === 'all')     return true;
+    if (activeFilter === 'done')    return p.status === 'done';
+    if (activeFilter === 'stalled') return stalledDays(p) >= 7 && p.status !== 'done';
+    if (activeFilter === 'active')  return p.status === 'active';
+    if (activeFilter === 'idea')    return p.status === 'idea';
+    return true;
+  });
+
+  const total   = projects.length;
+  const active  = projects.filter(p => p.status === 'active').length;
+  const stalled = projects.filter(p => stalledDays(p) >= 7 && p.status !== 'done').length;
+  const done    = projects.filter(p => p.status === 'done').length;
+
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="stat"><div class="stat-num">${total}</div><div class="stat-lbl">Total</div></div>
+    <div class="stat"><div class="stat-num">${active}</div><div class="stat-lbl">Active</div></div>
+    <div class="stat${stalled > 0 ? ' warn' : ''}"><div class="stat-num">${stalled}</div><div class="stat-lbl">Stalled</div></div>
+    <div class="stat"><div class="stat-num">${done}</div><div class="stat-lbl">Done</div></div>
+  `;
+
+  const grid = document.getElementById('grid');
+  if (!filtered.length) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">◻</div>
+        <div class="empty-title">${activeFilter === 'all' ? 'No projects yet' : 'Nothing here'}</div>
+        <div class="empty-sub">${activeFilter === 'all' ? 'Hit <strong>+ New project</strong> to get started.' : 'Try a different filter.'}</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => {
+    const days = stalledDays(p);
+    const isStalled = days >= 7 && p.status !== 'done';
+    const pct = p.progress || 0;
+    const fillColor = p.status === 'done' ? '#3a7fd4' : p.status === 'paused' ? '#c47f17' : '#2d9e6e';
+    const logCount = (p.logs || []).length;
+    const updated = days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`;
+    return `<div class="card${isStalled ? ' stalled' : ''}${p.status === 'done' ? ' done-card' : ''}" data-id="${p.id}">
+      <button class="del-card" data-del="${p.id}" title="Delete">×</button>
+      <div class="card-top">
+        <div class="card-title">${esc(p.name)}</div>
+        <span class="cat-badge ${CAT_CLASSES[p.cat]||'cat-other'}">${CAT_LABELS[p.cat]||p.cat}</span>
+      </div>
+      <div class="status-row">
+        <span class="status-dot" style="background:${STATUS_COLORS[p.status]||'#888'}"></span>
+        <span class="status-label">${STATUS_LABELS[p.status]||p.status}</span>
+        ${isStalled ? `<span class="stall-tag">stalled ${days}d</span>` : ''}
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${fillColor}"></div></div>
+      ${p.next ? `<div class="next-action">${esc(p.next)}</div>` : ''}
+      <div class="card-footer">
+        <span class="log-count">${logCount} log ${logCount===1?'entry':'entries'}</span>
+        <span class="updated">${updated}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target.closest('[data-del]')) return;
+      openEdit(el.dataset.id);
+    });
+  });
+  grid.querySelectorAll('[data-del]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      if (confirm('Delete this project? This cannot be undone.')) {
+        projects = projects.filter(p => p.id !== el.dataset.del);
+        saveToCloud(); render();
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════
+// FILTER
+// ══════════════════════════════════
+function onFilter(e) {
+  if (!e.target.dataset.filter) return;
+  activeFilter = e.target.dataset.filter;
+  document.querySelectorAll('.filter-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.filter === activeFilter)
+  );
+  render();
+}
+
+// ══════════════════════════════════
+// MODAL — PROJECT
+// ══════════════════════════════════
+function openAdd() {
+  showProjectModal({ id:'', name:'', cat:'other', status:'idea', progress:0, next:'', notes:'', logs:[], created:Date.now() });
+}
+function openEdit(id) {
+  const p = projects.find(x => x.id === id);
+  if (p) showProjectModal(p);
+}
+
+function showProjectModal(p) {
+  const isNew = !p.id;
+  const logs = (p.logs || []).slice().reverse();
+  document.getElementById('modalBox').innerHTML = `
+    <div class="modal-title">${isNew ? 'New project' : esc(p.name)}</div>
+    <div class="form-row">
+      <label>Name</label>
+      <input id="f-name" value="${esc(p.name)}" placeholder="What's this project called?">
+    </div>
+    <div class="grid-2">
+      <div class="form-row">
+        <label>Category</label>
+        <select id="f-cat">
+          <option value="audio"${p.cat==='audio'?' selected':''}>Audio / music</option>
+          <option value="hardware"${p.cat==='hardware'?' selected':''}>Hardware / electronics</option>
+          <option value="software"${p.cat==='software'?' selected':''}>Software / coding</option>
+          <option value="rc"${p.cat==='rc'?' selected':''}>RC / hobby</option>
+          <option value="other"${p.cat==='other'?' selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="idea"${p.status==='idea'?' selected':''}>Idea</option>
+          <option value="active"${p.status==='active'?' selected':''}>Active</option>
+          <option value="paused"${p.status==='paused'?' selected':''}>Paused</option>
+          <option value="done"${p.status==='done'?' selected':''}>Done</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Progress — <span id="pct-lbl">${p.progress||0}</span>%</label>
+      <div class="slider-wrap">
+        <input type="range" id="f-prog" min="0" max="100" step="5" value="${p.progress||0}">
+        <span class="slider-val" id="pct-disp">${p.progress||0}%</span>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Next action</label>
+      <input id="f-next" value="${esc(p.next||'')}" placeholder="What's the very next step?">
+    </div>
+    <div class="form-row">
+      <label>Notes</label>
+      <textarea id="f-notes">${esc(p.notes||'')}</textarea>
+    </div>
+    ${!isNew ? `
+      <div class="section-lbl">Activity log</div>
+      <div class="log-list" id="log-list">
+        ${logs.length ? logs.map(l => `
+          <div class="log-entry">${esc(l.text)}<div class="log-date">${fmtDate(l.ts)}</div></div>
+        `).join('') : '<div class="log-entry" style="color:var(--text3);font-style:italic">No entries yet</div>'}
+      </div>
+      <div class="log-add-row">
+        <input id="log-in" placeholder="Log an update…">
+        <button id="log-add-btn">Add</button>
+      </div>
+    ` : ''}
+    <div class="btn-row">
+      ${!isNew ? '<button class="btn danger" id="delBtn">Delete</button>' : ''}
+      <button class="btn" id="cancelBtn">Cancel</button>
+      <button class="btn primary" id="saveBtn">${isNew ? 'Create project' : 'Save changes'}</button>
+    </div>
+  `;
+
+  const modal = document.getElementById('modal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('f-name').focus(), 60);
+
+  const prog = document.getElementById('f-prog');
+  prog.oninput = () => {
+    document.getElementById('pct-lbl').textContent = prog.value;
+    document.getElementById('pct-disp').textContent = prog.value + '%';
+  };
+
+  document.getElementById('cancelBtn').onclick = closeModal;
+  document.getElementById('saveBtn').onclick = () => saveProject(p);
+
+  const delBtn = document.getElementById('delBtn');
+  if (delBtn) delBtn.onclick = () => {
+    if (confirm('Delete this project?')) {
+      projects = projects.filter(x => x.id !== p.id);
+      saveToCloud(); render(); closeModal();
+    }
+  };
+
+  if (!isNew) {
+    const logIn = document.getElementById('log-in');
+    const addLogEntry = () => {
+      const txt = logIn.value.trim();
+      if (!txt) return;
+      const proj = projects.find(x => x.id === p.id);
+      if (!proj) return;
+      proj.logs = proj.logs || [];
+      proj.logs.push({ text: txt, ts: Date.now() });
+      saveToCloud();
+      logIn.value = '';
+      const ll = document.getElementById('log-list');
+      const empty = ll.querySelector('[style*="italic"]');
+      if (empty) ll.innerHTML = '';
+      const div = document.createElement('div');
+      div.className = 'log-entry';
+      div.innerHTML = `${esc(txt)}<div class="log-date">today</div>`;
+      ll.prepend(div);
+      logIn.focus();
+    };
+    document.getElementById('log-add-btn').onclick = addLogEntry;
+    logIn.addEventListener('keydown', e => { if (e.key === 'Enter') addLogEntry(); });
+  }
+
+  modal.onclick = e => { if (e.target === modal) closeModal(); };
+  document.addEventListener('keydown', escClose);
+}
+
+function saveProject(orig) {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { document.getElementById('f-name').focus(); return; }
+  const data = {
+    id:       orig.id || uid(),
+    name,
+    cat:      document.getElementById('f-cat').value,
+    status:   document.getElementById('f-status').value,
+    progress: parseInt(document.getElementById('f-prog').value),
+    next:     document.getElementById('f-next').value.trim(),
+    notes:    document.getElementById('f-notes').value.trim(),
+    logs:     orig.logs || [],
+    created:  orig.created || Date.now(),
+  };
+  if (orig.id) {
+    const idx = projects.findIndex(x => x.id === orig.id);
+    if (idx >= 0) projects[idx] = data;
+  } else {
+    projects.unshift(data);
+  }
+  saveToCloud(); render(); closeModal();
+  toast(orig.id ? 'Project updated.' : 'Project created.');
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  document.removeEventListener('keydown', escClose);
+}
+function escClose(e) { if (e.key === 'Escape') { closeModal(); closeSettings(); } }
+
+// ══════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════
+function openSettings() {
+  document.getElementById('settings-bin-id').textContent = 'Bin ID: ' + (binId || '—');
+  document.getElementById('settingsModal').style.display = 'flex';
+}
+function closeSettings() {
+  document.getElementById('settingsModal').style.display = 'none';
+}
+document.getElementById('settingsModal').onclick = e => {
+  if (e.target === document.getElementById('settingsModal')) closeSettings();
+};
+
+function resetApiKey() {
+  if (!confirm('This will disconnect this device. You can reconnect by entering your API key again. Continue?')) return;
+  localStorage.removeItem(LS_KEY);
+  localStorage.removeItem(LS_BIN);
+  localStorage.removeItem(LS_CACHE);
+  apiKey = ''; binId = '';
+  closeSettings();
+  show('setup-screen');
+  document.getElementById('api-key-input').value = '';
+  document.getElementById('setup-btn').textContent = 'Connect & start →';
+  document.getElementById('setup-btn').disabled = false;
+}
+
+// ══════════════════════════════════
+// EXPORT / IMPORT
+// ══════════════════════════════════
+function exportData() {
+  const blob = new Blob([JSON.stringify(projects, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `projects-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('Backup downloaded.');
+}
+
+function onImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) throw new Error();
+      if (confirm(`Import ${data.length} project(s)? Existing projects with the same ID will be skipped.`)) {
+        const existingIds = new Set(projects.map(p => p.id));
+        const newOnes = data.filter(p => !existingIds.has(p.id));
+        projects = [...projects, ...newOnes];
+        saveToCloud(); render();
+        toast(`Imported ${newOnes.length} project(s).`);
+      }
+    } catch(_) {
+      toast('Could not read that file — check it is a valid backup.');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+</script>
+</body>
+</html>
